@@ -1,7 +1,8 @@
-# requirements.txt — vulnerable versions on purpose
-flask==1.0        # old, CVE-2018-1000656 (debug mode exposure)
-requests==2.18.4  # old, CVE-2018-18074
-pyyaml==3.13      # old, CVE-2017-18342 (arbitrary code exec via load)
-jinja2==2.10.1    # old, CVE-2019-10906 (template injection risk)
-werkzeug==0.15.3  # old, CVE-2019-14806
-markupsafe==2.0.1
+# requirements.txt — compatible vulnerable stack
+flask==1.0
+jinja2==2.10.1
+werkzeug==0.15.3
+itsdangerous==1.1.0     # <-- fixes the "json" import error
+markupsafe==2.0.1       # <-- fixes the soft_unicode error
+requests==2.18.4
+pyyaml==3.13
