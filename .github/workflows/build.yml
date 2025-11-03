@@ -20,4 +20,4 @@ jobs:
 
       - name: Build image
         run: |
-          docker build -t vulnerable-app:latest .
+          docker build -t vulnerable-app:latest app/.
