@@ -23,6 +23,15 @@ jobs:
           echo "::group::docker build"
           docker build -t vulnerable-app:latest app/.
           echo "::endgroup::"
+      
+      - name: Run app briefly to verify env var injection
+        env:
+          API_KEY: ${{ secrets.API_KEY }}   # <-- define this secret in GitHub > Settings > Secrets > Actions
+        run: |
+          echo "::group::verify env var"
+          # Run the container for a few seconds and print if key was loaded
+          docker run --rm -e API_KEY="${API_KEY}" vulnerable-app:latest python -c "import app; print('API_KEY loaded:', bool(app.API_KEY))"
+          echo "::endgroup::"
 
       - name: Install Semgrep
         run: |
