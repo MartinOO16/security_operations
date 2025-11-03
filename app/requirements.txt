@@ -1,9 +1,10 @@
-# compatible but still old (intentionally vulnerable for class)
-flask==1.1.4
-werkzeug==1.0.1          # >=1.0 fixes the Python 3.8 AST issue
-jinja2==2.11.3
-itsdangerous==1.1.0
-markupsafe==2.0.1
+# Fixed (still minimal) versions that satisfy Trivy’s “fixed in …” hints
+flask==2.3.3        # fixes CVE-2023-30861 (>=2.3.2)
+jinja2==3.1.4
+werkzeug==3.0.3     # fixes CVE-2023-25577, CVE-2024-34069
+itsdangerous==2.2.0
+markupsafe==2.1.5
 
-requests==2.18.4
-pyyaml==3.13
+requests==2.32.3    # fixes CVE-2018-18074 and others
+urllib3==2.2.3      # fixes CVE-2018-20060/2019-11324/2023-43804
+PyYAML==6.0.2       # fixes CVE-2017-18342/2020-14343 (use safe_load)
