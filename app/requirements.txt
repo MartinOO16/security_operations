@@ -4,4 +4,4 @@ requests==2.18.4  # old, CVE-2018-18074
 pyyaml==3.13      # old, CVE-2017-18342 (arbitrary code exec via load)
 jinja2==2.10.1    # old, CVE-2019-10906 (template injection risk)
 werkzeug==0.15.3  # old, CVE-2019-14806
-
+markupsafe==2.0.1
