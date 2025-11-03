@@ -40,15 +40,16 @@ jobs:
         # Detects hardcoded API_KEY patterns via stdin rule, no file outputs
         continue-on-error: true   # keep logs visible even if it finds something
         run: |
-          echo "::group::semgrep (inline custom rule)"
-          semgrep --config=- --error <<'YAML'
+          cat > /tmp/semgrep-inline.yml <<'YAML'
           rules:
             - id: hardcoded-api-key
               languages: [python]
               severity: ERROR
               message: "Hardcoded API key detected."
               pattern-regex: >
-               (?i)API_KEY\s*=\s*["'].*["']
+                (?i)API_KEY\s*=\s*["'].*["']
           YAML
+          echo "::group::semgrep (temp file)"
+          semgrep --config=/tmp/semgrep-inline.yml --error
           echo "::endgroup::"
       
