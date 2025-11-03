@@ -6,7 +6,7 @@ on:
   pull_request: {}
 
 jobs:
-  build:
+  build_and_scan:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
@@ -20,4 +20,6 @@ jobs:
 
       - name: Build image
         run: |
+          echo "::group::docker build"
           docker build -t vulnerable-app:latest app/.
+        echo "::endgroup::"
