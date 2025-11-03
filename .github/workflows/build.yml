@@ -62,3 +62,12 @@ jobs:
           semgrep --config=/tmp/semgrep-inline.yml --error
           echo "::endgroup::"
       
+      - name: Install Trivy
+        run: |
+          curl -sSLf https://raw.githubusercontent.com/aquasecurity/trivy/main/contrib/install.sh | sh -s -- -b /usr/local/bin
+
+      - name: Trivy image (fail on HIGH/CRITICAL, stdout table)
+        run: |
+          echo "::group::trivy image scan"
+          trivy image --severity HIGH,CRITICAL --exit-code 1 --format table vulnerable-app:latest
+          echo "::endgroup::"
