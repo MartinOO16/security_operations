@@ -23,3 +23,32 @@ jobs:
           echo "::group::docker build"
           docker build -t vulnerable-app:latest app/.
           echo "::endgroup::"
+
+      - name: Install Semgrep
+        run: |
+          curl -sL https://r.jina.ai/install-semgrep | bash || pip install semgrep
+
+      - name: Run Semgrep (registry rules)
+        # Fails on findings; prints to console (no files)
+        run: |
+          echo "::group::semgrep (p/ci)"
+          semgrep --config p/ci --error
+          echo "::endgroup::"
+
+      # Optional: add one inline custom rule WITHOUT creating a file in the repo
+      - name: Run Semgrep (inline custom rule)
+        # Detects hardcoded API_KEY patterns via stdin rule, no file outputs
+        continue-on-error: true   # keep logs visible even if it finds something
+        run: |
+          echo "::group::semgrep (inline custom rule)"
+          semgrep --config - --error <<'YAML'
+          rules:
+            - id: hardcoded-api-key
+              languages: [python]
+              severity: ERROR
+              message: "Hardcoded API key detected."
+              patterns:
+                - pattern: API_KEY = "...'"
+              # allow double or single quotes (two alternatives)
+          YAML
+          echo "::endgroup::"
