@@ -1,8 +1,9 @@
-# requirements.txt — compatible vulnerable stack
-flask==1.0
-jinja2==2.10.1
-werkzeug==0.15.3
-itsdangerous==1.1.0     # <-- fixes the "json" import error
-markupsafe==2.0.1       # <-- fixes the soft_unicode error
+# compatible but still old (intentionally vulnerable for class)
+flask==1.1.4
+werkzeug==1.0.1          # >=1.0 fixes the Python 3.8 AST issue
+jinja2==2.11.3
+itsdangerous==1.1.0
+markupsafe==2.0.1
+
 requests==2.18.4
 pyyaml==3.13
