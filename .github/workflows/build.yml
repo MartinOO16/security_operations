@@ -23,3 +23,42 @@ jobs:
           echo "::group::docker build"
           docker build -t vulnerable-app:latest app/.
           echo "::endgroup::"
+      
+      - name: Run app briefly to verify env var injection
+        env:
+          API_KEY: ${{ secrets.API_KEY }}   # <-- define this secret in GitHub > Settings > Secrets > Actions
+        run: |
+          echo "::group::verify env var"
+          # Run the container for a few seconds and print if key was loaded
+          docker run --rm -e API_KEY="${API_KEY}" vulnerable-app:latest python -c "import app; print('API_KEY loaded:', bool(app.API_KEY))"
+          echo "::endgroup::"
+
+      - name: Install Semgrep
+        run: |
+          curl -sL https://r.jina.ai/install-semgrep | bash || pip install semgrep
+
+      - name: Run Semgrep (registry rules)
+        # Fails on findings; prints to console (no files)
+        run: |
+          echo "::group::semgrep (p/ci)"
+          semgrep --config p/ci --error
+          echo "::endgroup::"
+
+      # Optional: add one inline custom rule WITHOUT creating a file in the repo
+      - name: Run Semgrep (inline custom rule)
+        # Detects hardcoded API_KEY patterns via stdin rule, no file outputs
+        continue-on-error: true   # keep logs visible even if it finds something
+        run: |
+          cat > /tmp/semgrep-inline.yml <<'YAML'
+          rules:
+            - id: hardcoded-api-key
+              languages: [python]
+              severity: ERROR
+              message: "Hardcoded API key detected."
+              pattern-regex: >
+                (?i)API_KEY\s*=\s*["'].*["']
+          YAML
+          echo "::group::semgrep (temp file)"
+          semgrep --config=/tmp/semgrep-inline.yml --error
+          echo "::endgroup::"
+      

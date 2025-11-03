@@ -3,13 +3,15 @@ import os
 
 app = Flask(__name__)
 
-# hardcoded secret (teaching point)
-API_KEY = "SECRET_API_KEY_12345"
+# Load API key securely from environment variable
+API_KEY = os.getenv("API_KEY")
 
 @app.route('/')
 def hello():
-    return f"Hello. API_KEY={API_KEY} PATH={os.getenv('PATH')}"
+    if API_KEY:
+        return f"Hello! API_KEY loaded from env. Length: {len(API_KEY)}"
+    else:
+        return "Hello! API_KEY not set. Please configure it as an environment variable."
 
 if __name__ == '__main__':
-    app.run(host='0.0.0.0', port=5000)
-
+    app.run(host='192.168.0.0', port=5000)
